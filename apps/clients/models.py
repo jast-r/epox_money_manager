@@ -15,6 +15,7 @@ class Client(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        db_table = "apps_clients"
         verbose_name = "client"
         verbose_name_plural = "clients"
 

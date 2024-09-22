@@ -28,5 +28,6 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
+        db_table = "apps_orders"
         verbose_name = "order"
         verbose_name_plural = "orders"

@@ -17,5 +17,6 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        db_table = "apps_products"
         verbose_name = "product"
         verbose_name_plural = "products"
