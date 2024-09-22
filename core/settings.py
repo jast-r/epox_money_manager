@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.home'  # Enable the inner home (home)
+    'apps.clients',  # Enable the inner clients (clients)
+    'apps.home',     # Enable the inner home (home)
+    'apps.orders',   # Enable the inner orders (orders)
+    'apps.products', # Enable the inner products (products)
 ]
 
 MIDDLEWARE = [
