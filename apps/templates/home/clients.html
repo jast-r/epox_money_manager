@@ -31,22 +31,22 @@
           <table class="table align-items-center table-flush clients-list">
             <thead class="thead-light">
               <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Имя</th>
-                <th scope="col">Ник в тг</th>
-                <th scope="col">Номер телефона</th>
-                <th scope="col"> &nbsp;</th>
+                <th class="text-center" scope="col">ID</th>
+                <th class="text-center" scope="col">Имя</th>
+                <th class="text-center" scope="col">Ник в тг</th>
+                <th class="text-center" scope="col">Номер телефона</th>
+                <th class="text-center" scope="col"> &nbsp;</th>
               </tr>
             </thead>
             <tbody>
               {% if clients %}
                 {% for client in clients %}
                 <tr>
-                  <th scope="row">{{ client.id }}</th>
-                  <td>{{ client.name }}</td>
-                  <td>{{ client.tg_username }}</td>
-                  <td>{{ client.phone }}</td>
-                  <td>
+                  <td class="text-center"><b>{{ client.id }}</b></th>
+                  <td class="text-center">{{ client.name }}</td>
+                  <td class="text-center">{{ client.tg_username }}</td>
+                  <td class="text-center">{{ client.phone }}</td>
+                  <td class="text-center">
                     <a href="{% url 'api/clients' client.id %}" class="get-client-form">Изменить</a>
                   </td>
                 </tr>
