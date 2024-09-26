@@ -1,9 +1,9 @@
 <tr>
-    <!-- <th scope="row">{{ order.id }}</th>
-    <td>{{ order.product_name }}</td>
-    <td>${{ order.price }}</td>
-    <td>{{ order.created_time|date:'Y-m-d' }}</td>
+    <th scope="row">{{ client.id }}</th>
+    <td>{{ client.name }}</td>
+    <td>{{ client.tg_username }}</td>
+    <td>{{ client.phone }}</td>
     <td>
-        <a href="{% url 'orders' order.id %}" class="get-order-form">Edit</a>
-    </td> -->
+        <a href="{% url 'api/clients' clients.id %}" class="get-client-form">Edit</a>
+    </td>
 </tr>

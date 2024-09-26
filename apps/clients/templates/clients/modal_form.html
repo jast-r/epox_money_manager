@@ -10,7 +10,7 @@
         <div class="card-body">
             <!-- Form -->
             <form method="{% if form.instance.id %}PUT{% else %}POST{% endif %}"
-                action="{% if form.instance.id %}{% url 'orders' form.instance.id %}{% else %}{% url 'orders' %}{% endif %}">
+                action="{% if form.instance.id %}{% url 'api/clients' form.instance.id %}{% else %}{% url 'api/clients' %}{% endif %}">
                 {% for field in form %}
                 <div class="form-group mb-4">
                     {{ field.label_tag }}{{ field }}

@@ -34,7 +34,7 @@ function AjaxGETClientForm(params) {
         type: 'GET',
         success: function (data) {
             modal.find('.modal-content').html(data.template);
-            modal.modal();
+            modal.modal('show');
         },
         error: function () {
             notification.error('Error occurred');

@@ -5,10 +5,18 @@ from django.http import JsonResponse, QueryDict
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.shortcuts import render
 
 from apps.clients.forms import ClientForm
 from apps.clients.models import Client
 from apps.utils import form_validation_error
+
+
+def Clients(request):
+    clients = Client.objects.all()
+    context = {'clients': clients}
+
+    return render(request, 'home/clients.html', context)
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
@@ -16,7 +24,6 @@ class ClientView(View):
     context = {}
 
     def get(self, request, pk=None, action=None):
-        
         if request.is_ajax():
             self.context['template'] = self.get_create_form(pk)
 
@@ -25,8 +32,8 @@ class ClientView(View):
     def post(self, request, pk=None, action=None):
         form = ClientForm(request.POST)
         if form.is_valid():
-            order = form.save()
-            item = render_to_string('clients/row_item.html', {'order': order})
+            client = form.save()
+            item = render_to_string('clients/row_item.html', {'client': client})
 
             response = {'valid': 'success', 'message': 'новый клиент создан успешно.', 'item': item}
         else:
@@ -34,13 +41,13 @@ class ClientView(View):
         return JsonResponse(response)
 
     def put(self, request, pk=None, action=None):
-        order = self.get_object(pk)
-        form = ClientForm(QueryDict(request.body), instance=order)
+        client = self.get_object(pk)
+        form = ClientForm(QueryDict(request.body), instance=client)
         if form.is_valid():
-            order = form.save()
-            item = render_to_string('clients/row_item.html', {'order': order})
+            client = form.save()
+            item = render_to_string('clients/row_item.html', {'client': client})
 
-            response = {'valid': 'success', 'message': 'order updated successfully.', 'item': item}
+            response = {'valid': 'success', 'message': 'client updated successfully.', 'item': item}
         else:
             response = {'valid': 'error', 'message': form_validation_error(form)}
 
@@ -48,11 +55,10 @@ class ClientView(View):
 
     def get_create_form(self, pk=None):
         form = ClientForm()
-        print("ITS ME")
         if pk:
             form = ClientForm(instance=self.get_object(pk))
         return render_to_string('clients/modal_form.html', {'form': form})
 
     def get_object(self, pk):
-        order = Client.objects.get(id=pk)
-        return order
+        client = Client.objects.get(id=pk)
+        return client

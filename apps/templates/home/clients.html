@@ -19,8 +19,8 @@
               <h3 class="mb-0">Клиенты</h3>
             </div>
             <div class="col text-end">
-              {#                            <form action="">{% csrf_token %}</form>#}
-              <a class="btn bg-gradient-dark mb-0 ms-auto get-client-form" href="{% url 'clients' %}">
+              {#  <form action="">{% csrf_token %}</form> #}
+              <a class="btn bg-gradient-dark mb-0 ms-auto get-client-form" href="{% url 'api/clients' %}">
                 <i class="fas fa-plus me-2"></i>Новый клиент
               </a>
             </div>
@@ -40,17 +40,17 @@
             </thead>
             <tbody>
               {% if clients %}
-              {% for client in clients %}
-              <tr>
-                <th scope="row">{{ client.id }}</th>
-                <td>{{ client.name }}</td>
-                <td>{{ client.tg_username }}</td>
-                <td>{{ client.phone }}</td>
-                <td>
-                  <a href="{% url 'clients' client.id %}" class="get-client-form">Изменить</a>
-                </td>
-              </tr>
-              {% endfor %}
+                {% for client in clients %}
+                <tr>
+                  <th scope="row">{{ client.id }}</th>
+                  <td>{{ client.name }}</td>
+                  <td>{{ client.tg_username }}</td>
+                  <td>{{ client.phone }}</td>
+                  <td>
+                    <a href="{% url 'api/clients' client.id %}" class="get-client-form">Изменить</a>
+                  </td>
+                </tr>
+                {% endfor %}
               {% endif %}
             </tbody>
           </table>
@@ -72,79 +72,4 @@
 
 <!-- Specific JS goes HERE -->
 {% block javascripts %}
-<script>
-var modal = $('#modal-system');
-
-$(document).ready(function () {
-    // Get Clients Form to Create or Edit
-    $('#clientsList').on('click', '.get-client-form', function (event) {
-        event.preventDefault();
-        var btn = $(this);
-        var url = btn.attr('href');
-        var params = [];
-        params['url'] = url;
-        AjaxGETClientForm(params);
-    });
-
-    // Save client after click save-client class
-    modal.on('click', '.save-client', function (event) {
-        event.preventDefault();
-        var btn = $(this);
-        var form = btn.closest('form');
-        var url = form.attr('action');
-        var params = [];
-        params['url'] = url;
-        params['method'] = form.attr('method');
-        params['query'] = form.serialize();
-        AjaxPOSTClientForm(params);
-    });
-});
-
-
-// Functions
-
-function AjaxGETClientForm(params) {
-    $.ajax({
-        url: params['url'],
-        type: 'GET',
-        success: function (data) {
-            modal.find('.modal-content').html(data.template);
-            modal.modal();
-        },
-        error: function () {
-            notification.error('Error occurred');
-        }
-    });
-}
-
-
-function AjaxPOSTClientForm(params) {
-    $.ajax({
-        url: params['url'],
-        type: params['method'],
-        data: params['query'],
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
-        },
-        success: function (data) {
-            notification[data.valid](data.message);
-
-            if (data.valid === 'success') {
-                if (params['method'] === 'PUT')
-                    $('.clients-list').find(".get-client-form[href='" + params['url'] + "']").closest('tr').replaceWith(data.item);
-                else
-                    $('.clients-list tbody').prepend(data.item);
-                modal.modal('hide');
-
-                setTimeout(function () {
-                    location.reload();
-                }, 2000);
-            }
-        },
-        error: function () {
-            notification.error('Error occurred');
-        }
-    });
-}
-</script>
 {% endblock javascripts %}

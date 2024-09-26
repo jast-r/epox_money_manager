@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
 
 from django.urls import path, re_path
-from apps.clients.views import ClientView
+from apps.clients.views import ClientView, Clients
 
 urlpatterns = [
-    re_path(r'^clients/(?:(?P<pk>\d+)/)?(?:(?P<action>\w+)/)?', ClientView.as_view(), name='clients'),
+    path('clients/', Clients, name='clients_list'),
+    re_path(r'^api/clients/(?:(?P<pk>\d+)/)?(?:(?P<action>\w+)/)?', ClientView.as_view(), name='clients'),
 ]

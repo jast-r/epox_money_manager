@@ -9,8 +9,12 @@
 
 {% load static %}
 
-<script type="application/javascript" src="{% static 'clients/clients_assets/js/notify.js' %}"></script>
-<script type="application/javascript" src="{% static 'clients/clients_assets/js/order_script.js' %}"></script>
+<script src="{% static 'assets/vendor/js-cookie/dist/js.cookie.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery/dist/jquery.min.js' %}"></script>
+<script src="{% static 'assets/vendor/notyf/notyf.min.js' %}"></script>
+
+<script type="application/javascript" src="{% static 'clients_assets/js/notify.js' %}"></script>
+<script type="application/javascript" src="{% static 'clients_assets/js/clients_script.js' %}"></script>
 <script>
   {% if messages %}
   {% for message in messages %}
