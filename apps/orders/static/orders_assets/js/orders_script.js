@@ -1,18 +1,18 @@
 var modal = $('#modal-system');
 
-$(function () {
-    // Get Clients Form to Create or Edit
-    $('#clientsList').on('click', '.get-client-form', function (event) {
+$(document).ready(function () {
+    // Get Orders Form to Create or Edit
+    $('#ordersList').on('click', '.get-orders-form', function (event) {
         event.preventDefault();
         var btn = $(this);
         var url = btn.attr('href');
         var params = [];
         params['url'] = url;
-        AjaxGETClientForm(params);
+        AjaxGETOrderForm(params);
     });
 
-    // Save client after click save-client class
-    modal.on('click', '.save-client', function (event) {
+    // Save order after click save-order class
+    modal.on('click', '.save-order', function (event) {
         event.preventDefault();
         var btn = $(this);
         var form = btn.closest('form');
@@ -21,14 +21,14 @@ $(function () {
         params['url'] = url;
         params['method'] = form.attr('method');
         params['query'] = form.serialize();
-        AjaxPOSTClientForm(params);
+        AjaxPOSTOrderForm(params);
     });
 });
 
 
 // Functions
 
-function AjaxGETClientForm(params) {
+function AjaxGETOrderForm(params) {
     $.ajax({
         url: params['url'],
         type: 'GET',
@@ -43,7 +43,7 @@ function AjaxGETClientForm(params) {
 }
 
 
-function AjaxPOSTClientForm(params) {
+function AjaxPOSTOrderForm(params) {
     $.ajax({
         url: params['url'],
         type: params['method'],
@@ -56,7 +56,7 @@ function AjaxPOSTClientForm(params) {
 
             if (data.valid === 'success') {
                 if (params['method'] === 'PUT')
-                    $('.clients-list').find(".get-client-form[href='" + params['url'] + "']").closest('tr').replaceWith(data.item);
+                    $('.orders-list').find(".get-order-form[href='" + params['url'] + "']").closest('tr').replaceWith(data.item);
                 else
                     $('.clients-list tbody').prepend(data.item);
                 modal.modal('hide');

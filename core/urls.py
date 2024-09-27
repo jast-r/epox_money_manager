@@ -13,7 +13,7 @@ urlpatterns = [
     # ADD NEW Routes HERE
     path("", include("apps.clients.urls")),     # client routes
     # path("", include("apps.orders.urls")),      # orders routes
-    # path("", include("apps.products.urls")),    # product routes
+    path("", include("apps.products.urls")),    # product routes
 
     # Leave `Home.Urls` as last the last line
     path("", include("apps.home.urls"))

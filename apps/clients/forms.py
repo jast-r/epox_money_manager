@@ -20,7 +20,7 @@ class ClientForm(forms.ModelForm):
         label="Номер телефона",
         widget=forms.TextInput(attrs={
             'class': 'form-control client',
-            'autocomplete': 'tel'  # Атрибут для автозаполнения телефона
+            'autocomplete': '+70000000000'  # Атрибут для автозаполнения телефона
         })
     )
 

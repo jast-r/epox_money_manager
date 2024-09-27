@@ -1,18 +1,19 @@
 var modal = $('#modal-system');
 
 $(function () {
-    // Get Clients Form to Create or Edit
-    $('#clientsList').on('click', '.get-client-form', function (event) {
+    // Get Products Form to Create or Edit
+    $('#productsList').on('click', '.get-product-form', function (event) {
+        console.log("AAAAAAA")
         event.preventDefault();
         var btn = $(this);
         var url = btn.attr('href');
         var params = [];
         params['url'] = url;
-        AjaxGETClientForm(params);
+        AjaxGETProductForm(params);
     });
 
-    // Save client after click save-client class
-    modal.on('click', '.save-client', function (event) {
+    // Save product after click save-product class
+    modal.on('click', '.save-product', function (event) {
         event.preventDefault();
         var btn = $(this);
         var form = btn.closest('form');
@@ -21,14 +22,14 @@ $(function () {
         params['url'] = url;
         params['method'] = form.attr('method');
         params['query'] = form.serialize();
-        AjaxPOSTClientForm(params);
+        AjaxPOSTProductForm(params);
     });
 });
 
 
 // Functions
 
-function AjaxGETClientForm(params) {
+function AjaxGETProductForm(params) {
     $.ajax({
         url: params['url'],
         type: 'GET',
@@ -43,7 +44,7 @@ function AjaxGETClientForm(params) {
 }
 
 
-function AjaxPOSTClientForm(params) {
+function AjaxPOSTProductForm(params) {
     $.ajax({
         url: params['url'],
         type: params['method'],
@@ -56,9 +57,9 @@ function AjaxPOSTClientForm(params) {
 
             if (data.valid === 'success') {
                 if (params['method'] === 'PUT')
-                    $('.clients-list').find(".get-client-form[href='" + params['url'] + "']").closest('tr').replaceWith(data.item);
+                    $('.products-list').find(".get-product-form[href='" + params['url'] + "']").closest('tr').replaceWith(data.item);
                 else
-                    $('.clients-list tbody').prepend(data.item);
+                    $('.product-list tbody').prepend(data.item);
                 modal.modal('hide');
 
                 setTimeout(function () {

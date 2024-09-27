@@ -11,12 +11,14 @@ from apps.clients.forms import ClientForm
 from apps.clients.models import Client
 from apps.utils import form_validation_error
 
-
 def Clients(request):
     clients = Client.objects.all()
-    context = {'clients': clients}
+    context = {
+        'segment': 'clients',
+        'clients': clients,
+    }
 
-    return render(request, 'home/clients.html', context)
+    return render(request, 'clients/clients.html', context)
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')

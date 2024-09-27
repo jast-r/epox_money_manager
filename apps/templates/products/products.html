@@ -1,0 +1,81 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %} Продукция {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card" id="productsList">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Продукты</h3>
+            </div>
+            <div class="col text-end">
+              {#  <form action="">{% csrf_token %}</form> #}
+              <a class="btn bg-gradient-dark mb-0 ms-auto get-product-form" href="{% url 'api/products' %}">
+                <i class="fas fa-plus me-2"></i>Новый продукт
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <!-- Products table -->
+          <table class="table align-items-center table-flush products-list">
+            <thead class="thead-light">
+              <tr>
+                <th class="text-center" scope="col">ID</th>
+                <th class="text-center" scope="col">Наименование</th>
+                <th class="text-center" scope="col">Тип</th>
+                <th class="text-center" scope="col">Описание</th>
+                <th class="text-center" scope="col">Цена</th>
+                <th class="text-center" scope="col"> &nbsp;</th>
+                <th class="text-center" scope="col"> &nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if products %}
+                {% for product in products %}
+                <tr>
+                  <td class="text-center"><b>{{ product.id }}</b></th>
+                  <td class="text-center">{{ product.name }}</td>
+                  <td class="text-center">{{ product.type }}</td>
+                  <td class="text-center">{{ product.description }}</td>
+                  <td class="text-center">{{ product.price }}</td>
+                  <td class="text-center">
+                    <a href="{% url 'api/products' product.id %}" class="get-product-form">Изменить</a>
+                  </td>
+                  <td class="text-center">
+                    <a href="{% url 'api/products' product.id %}" class="delete-product">Удалить</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+
+          {% if products %}
+          {{ products.pagination }}
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include "includes/footer.html" %}
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+{% endblock javascripts %}

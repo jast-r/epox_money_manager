@@ -1,0 +1,75 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %} Клиенты {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card" id="clientsList">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Клиенты</h3>
+            </div>
+            <div class="col text-end">
+              {#  <form action="">{% csrf_token %}</form> #}
+              <a class="btn bg-gradient-dark mb-0 ms-auto get-client-form" href="{% url 'api/clients' %}">
+                <i class="fas fa-plus me-2"></i>Новый клиент
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <!-- Clients table -->
+          <table class="table align-items-center table-flush clients-list">
+            <thead class="thead-light">
+              <tr>
+                <th class="text-center" scope="col">ID</th>
+                <th class="text-center" scope="col">Имя</th>
+                <th class="text-center" scope="col">Ник в тг</th>
+                <th class="text-center" scope="col">Номер телефона</th>
+                <th class="text-center" scope="col"> &nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if clients %}
+                {% for client in clients %}
+                <tr>
+                  <td class="text-center"><b>{{ client.id }}</b></th>
+                  <td class="text-center">{{ client.name }}</td>
+                  <td class="text-center">{{ client.tg_username }}</td>
+                  <td class="text-center">{{ client.phone }}</td>
+                  <td class="text-center">
+                    <a href="{% url 'api/clients' client.id %}" class="get-client-form">Изменить</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+
+          {% if clients %}
+          {{ clients.pagination }}
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include "includes/footer.html" %}
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+{% endblock javascripts %}

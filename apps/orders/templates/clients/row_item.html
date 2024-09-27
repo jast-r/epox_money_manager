@@ -1,0 +1,9 @@
+<tr>
+    <td class="text-center"><b>{{ client.id }}</b></th>
+    <td class="text-center">{{ client.name }}</td>
+    <td class="text-center">{{ client.tg_username }}</td>
+    <td class="text-center">{{ client.phone }}</td>
+    <td class="text-center">
+        <a href="{% url 'api/clients' client.id %}" class="get-client-form">Изменить</a>
+    </td>
+</tr>
