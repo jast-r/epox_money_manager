@@ -36,20 +36,13 @@
                 <th class="text-center" scope="col">Ник в тг</th>
                 <th class="text-center" scope="col">Номер телефона</th>
                 <th class="text-center" scope="col"> &nbsp;</th>
+                <th class="text-center" scope="col"> &nbsp;</th>
               </tr>
             </thead>
             <tbody>
               {% if clients %}
                 {% for client in clients %}
-                <tr>
-                  <td class="text-center"><b>{{ client.id }}</b></th>
-                  <td class="text-center">{{ client.name }}</td>
-                  <td class="text-center">{{ client.tg_username }}</td>
-                  <td class="text-center">{{ client.phone }}</td>
-                  <td class="text-center">
-                    <a href="{% url 'api/clients' client.id %}" class="get-client-form">Изменить</a>
-                  </td>
-                </tr>
+                  {% include "clients/row_item.html" %}
                 {% endfor %}
               {% endif %}
             </tbody>

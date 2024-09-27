@@ -16,7 +16,7 @@ class Order(models.Model):
         3: "Срочно",
     }
 
-    ID = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     client = models.ForeignKey(Client, null=True, on_delete=models.SET_NULL)
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     quantity = models.IntegerField(null=False, blank=False)

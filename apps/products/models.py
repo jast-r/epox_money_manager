@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Product(models.Model):
-    ID = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, null=False, blank=False)
     description = models.TextField(null=True, blank=True)
     price = models.FloatField(null=False, blank=False)

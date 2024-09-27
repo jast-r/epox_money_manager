@@ -43,19 +43,7 @@
             <tbody>
               {% if products %}
                 {% for product in products %}
-                <tr>
-                  <td class="text-center"><b>{{ product.id }}</b></th>
-                  <td class="text-center">{{ product.name }}</td>
-                  <td class="text-center">{{ product.type }}</td>
-                  <td class="text-center">{{ product.description }}</td>
-                  <td class="text-center">{{ product.price }}</td>
-                  <td class="text-center">
-                    <a href="{% url 'api/products' product.id %}" class="get-product-form">Изменить</a>
-                  </td>
-                  <td class="text-center">
-                    <a href="{% url 'api/products' product.id %}" class="delete-product">Удалить</a>
-                  </td>
-                </tr>
+                  {% include "products/row_item.html" %}
                 {% endfor %}
               {% endif %}
             </tbody>

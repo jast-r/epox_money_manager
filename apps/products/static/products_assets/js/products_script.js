@@ -3,7 +3,6 @@ var modal = $('#modal-system');
 $(function () {
     // Get Products Form to Create or Edit
     $('#productsList').on('click', '.get-product-form', function (event) {
-        console.log("AAAAAAA")
         event.preventDefault();
         var btn = $(this);
         var url = btn.attr('href');
