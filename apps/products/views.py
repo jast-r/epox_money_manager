@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, QueryDict
 from django.template.loader import render_to_string
@@ -12,7 +11,7 @@ from apps.products.models import Product
 from apps.utils import form_validation_error
 
 def Products(request):
-    products = Product.objects.all()
+    products = Product.objects.filter(deleted_at=None).order_by('id').all()
     context = {
         'segment': 'products',
         'products': products,
@@ -49,10 +48,15 @@ class ProductView(View):
             product = form.save()
             item = render_to_string('products/row_item.html', {'product': product})
 
-            response = {'valid': 'success', 'message': 'product updated successfully.', 'item': item}
+            response = {'valid': 'success', 'message': 'Продукт обновлен успешно.', 'item': item}
         else:
             response = {'valid': 'error', 'message': form_validation_error(form)}
 
+        return JsonResponse(response)
+
+    def delete(self, request, pk=None, action=None):
+        Product.objects.filter(pk=pk).update(deleted_at=timezone.now())
+        response = {'valid': 'success', 'message': 'Продукт удален успешно.'}
         return JsonResponse(response)
 
     def get_create_form(self, pk=None):

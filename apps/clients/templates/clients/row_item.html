@@ -4,9 +4,13 @@
     <td class="text-center">{{ client.tg_username }}</td>
     <td class="text-center">{{ client.phone }}</td>
     <td class="text-center">
-        <a href="{% url 'api/clients' client.id %}" class="get-client-form">Изменить</a>
+        <a href="{% url 'api/clients' client.id %}" class="get-client-form">
+            <i class="fas fa-edit"></i>
+        </a>
     </td>
     <td class="text-center">
-        <a href="{% url 'api/clients' client.id %}" class="get-client-form">Удалить</a>
+        <a href="{% url 'api/clients' client.id %}" class="delete-client">
+            <i class="fas fa-trash"></i>
+        </a>
     </td>
 </tr>

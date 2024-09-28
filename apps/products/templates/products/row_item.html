@@ -5,9 +5,13 @@
     <td class="text-center">{{ product.description }}</td>
     <td class="text-center">{{ product.price }} ₽</td>
     <td class="text-center">
-        <a href="{% url 'api/products' product.id %}" class="get-product-form">Изменить</a>
+        <a href="{% url 'api/products' product.id %}" class="get-product-form">
+            <i class="fas fa-edit"></i>
+        </a>
     </td>
     <td class="text-center">
-        <a href="{% url 'api/products' product.id %}" class="delete-product">Удалить</a>
+        <a href="{% url 'api/products' product.id %}" class="delete-product">
+            <i class="fas fa-trash"></i>
+        </a>
     </td>
 </tr>

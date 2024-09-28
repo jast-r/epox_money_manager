@@ -1,14 +1,23 @@
 var modal = $('#modal-system');
 
-$(document).ready(function () {
+$(function () {
     // Get Orders Form to Create or Edit
-    $('#ordersList').on('click', '.get-orders-form', function (event) {
+    $('#ordersList').on('click', '.get-order-form', function (event) {
         event.preventDefault();
         var btn = $(this);
         var url = btn.attr('href');
         var params = [];
         params['url'] = url;
         AjaxGETOrderForm(params);
+    });
+
+    $('#ordersList').on('click', '.delete-order', function (event) {
+        event.preventDefault();
+        var btn = $(this);
+        var url = btn.attr('href');
+        var params = [];
+        params['url'] = url;
+        AjaxDeleteOrder(params);
     });
 
     // Save order after click save-order class
@@ -42,7 +51,6 @@ function AjaxGETOrderForm(params) {
     });
 }
 
-
 function AjaxPOSTOrderForm(params) {
     $.ajax({
         url: params['url'],
@@ -58,7 +66,7 @@ function AjaxPOSTOrderForm(params) {
                 if (params['method'] === 'PUT')
                     $('.orders-list').find(".get-order-form[href='" + params['url'] + "']").closest('tr').replaceWith(data.item);
                 else
-                    $('.clients-list tbody').prepend(data.item);
+                    $('.orders-list tbody').append(data.item);
                 modal.modal('hide');
 
                 setTimeout(function () {
@@ -68,6 +76,23 @@ function AjaxPOSTOrderForm(params) {
         },
         error: function () {
             notification.error('Error occurred');
+        }
+    });
+}
+
+
+function AjaxDeleteOrder(params) {
+    $.ajax({
+        url: params['url'],
+        type: 'DELETE',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
+        },
+        success: function (data) {
+            notification[data.valid](data.message);
+            if (data.valid === 'success') {
+                $('.orders-list').find(".get-order-form[href='" + params['url'] + "']").closest('tr').remove();
+            }
         }
     });
 }

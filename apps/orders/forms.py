@@ -1,5 +1,7 @@
 from django import forms
 from apps.orders.models import Order
+from apps.clients.models import Client
+from apps.products.models import Product
 
 class OrderForm(forms.ModelForm):
     client = forms.ModelChoiceField(
@@ -8,7 +10,8 @@ class OrderForm(forms.ModelForm):
             'class': 'form-control order',
             'autocomplete': ''
         }),
-        queryset=Order.objects.none(),
+        empty_label=None,
+        queryset=Client.objects.all()
     )
     product = forms.ModelChoiceField(
         label="Продукт",
@@ -16,7 +19,8 @@ class OrderForm(forms.ModelForm):
             'class': 'form-control order',
             'autocomplete': ''
         }),
-        queryset=Order.objects.none(),
+        empty_label=None,
+        queryset=Product.objects.all()
     )
     quantity = forms.IntegerField(
         label="Количество",
@@ -52,9 +56,15 @@ class OrderForm(forms.ModelForm):
             'class': 'form-control order',
             'autocomplete': ''
         }),
-        choices=Order.PRIORITIES.items()
+        choices=Order.Priority.choices
     )
 
     class Meta:
         model = Order
         fields = ['client', 'product', 'quantity', 'sell_price', 'address', 'description', 'priority']
+
+    # Переопределяем отображаемое значение для поля client и product
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['client'].label_from_instance = lambda obj: obj.tg_username
+        self.fields['product'].label_from_instance = lambda obj: obj.name

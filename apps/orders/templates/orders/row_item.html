@@ -1,0 +1,29 @@
+<tr>
+    <td class="text-center"><b>{{ order.id }}</b></th>
+    <td class="text-center">{{ order.client.tg_username }}</td>
+    <td class="text-center">{{ order.product.name }}</td>
+    <td class="text-center">{{ order.quantity }}</td>
+    <td class="text-center">{{ order.sell_price }} ₽</td>
+    <td class="text-center">{{ order.address }}</td>
+    <td class="text-center">{{ order.description }}</td>
+    <td class="text-center">
+        {% if order.priority == order.Priority.URGENT %}
+        <span class="badge badge-sm bg-danger">{{ order.get_priority_display }}</span>
+        {% elif order.priority == order.Priority.MEDIUM %}
+        <span class="badge badge-sm bg-warning">{{ order.get_priority_display }}</span>
+        {% else %}
+        <span class="badge badge-sm bg-primary">{{ order.get_priority_display }}</span>
+        {% endif %}
+    </td>
+    <td class="text-center">{{ order.created_at|date:"d.m.Y H:i:s" }}</td>
+    <td class="text-center">
+        <a href="{% url 'api/orders' order.id %}" class="get-order-form">
+            <i class="fas fa-edit"></i>
+        </a>
+    </td>
+    <td class="text-center">
+        <a href="{% url 'api/orders' order.id %}" class="delete-order">
+            <i class="fas fa-trash"></i>
+        </a>
+    </td>
+</tr>

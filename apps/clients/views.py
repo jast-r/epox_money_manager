@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, QueryDict
 from django.template.loader import render_to_string
@@ -12,7 +11,7 @@ from apps.clients.models import Client
 from apps.utils import form_validation_error
 
 def Clients(request):
-    clients = Client.objects.all()
+    clients = Client.objects.filter(deleted_at=None).order_by('id').all()
     context = {
         'segment': 'clients',
         'clients': clients,
@@ -37,7 +36,7 @@ class ClientView(View):
             client = form.save()
             item = render_to_string('clients/row_item.html', {'client': client})
 
-            response = {'valid': 'success', 'message': 'новый клиент создан успешно.', 'item': item}
+            response = {'valid': 'success', 'message': 'Новый клиент создан успешно.', 'item': item}
         else:
             response = {'valid': 'error', 'message': form_validation_error(form)}
         return JsonResponse(response)
@@ -49,10 +48,15 @@ class ClientView(View):
             client = form.save()
             item = render_to_string('clients/row_item.html', {'client': client})
 
-            response = {'valid': 'success', 'message': 'client updated successfully.', 'item': item}
+            response = {'valid': 'success', 'message': 'Клиент обновлен успешно.', 'item': item}
         else:
             response = {'valid': 'error', 'message': form_validation_error(form)}
 
+        return JsonResponse(response)
+    
+    def delete(self, request, pk=None, action=None):
+        Client.objects.filter(pk=pk).update(deleted_at=timezone.now())
+        response = {'valid': 'success', 'message': 'Клиент удален успешно.'}
         return JsonResponse(response)
 
     def get_create_form(self, pk=None):

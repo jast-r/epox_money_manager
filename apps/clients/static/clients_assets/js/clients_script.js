@@ -11,6 +11,15 @@ $(function () {
         AjaxGETClientForm(params);
     });
 
+    $('#clientsList').on('click', '.delete-client', function (event) {
+        event.preventDefault();
+        var btn = $(this);
+        var url = btn.attr('href');
+        var params = [];
+        params['url'] = url;
+        AjaxDeleteClient(params);
+    });
+
     // Save client after click save-client class
     modal.on('click', '.save-client', function (event) {
         event.preventDefault();
@@ -42,7 +51,6 @@ function AjaxGETClientForm(params) {
     });
 }
 
-
 function AjaxPOSTClientForm(params) {
     $.ajax({
         url: params['url'],
@@ -58,7 +66,7 @@ function AjaxPOSTClientForm(params) {
                 if (params['method'] === 'PUT')
                     $('.clients-list').find(".get-client-form[href='" + params['url'] + "']").closest('tr').replaceWith(data.item);
                 else
-                    $('.clients-list tbody').prepend(data.item);
+                    $('.clients-list tbody').append(data.item);
                 modal.modal('hide');
 
                 setTimeout(function () {
@@ -68,6 +76,22 @@ function AjaxPOSTClientForm(params) {
         },
         error: function () {
             notification.error('Error occurred');
+        }
+    });
+}
+
+function AjaxDeleteClient(params) {
+    $.ajax({
+        url: params['url'],
+        type: 'DELETE',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
+        },
+        success: function (data) {
+            notification[data.valid](data.message);
+            if (data.valid === 'success') {
+                $('.clients-list').find(".get-client-form[href='" + params['url'] + "']").closest('tr').remove();
+            }
         }
     });
 }

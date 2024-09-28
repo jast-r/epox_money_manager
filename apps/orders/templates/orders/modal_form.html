@@ -2,19 +2,19 @@
     <div class="card p-4">
         <button type="button" class="btn-close bg-black" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="card-header border-0 text-center pb-0">
-            <h2 class="mb-0">{% if form.instance.id %}Редактирование клиента {{ form.instance.tg_username }}{% else %}Новый клиент{% endif %}</h2>
+            <h2 class="mb-0">{% if form.instance.id %}Редактирование заказа {{ form.instance.id }}{% else %}Новый заказ{% endif %}</h2>
         </div>
         <div class="card-body">
             <!-- Form -->
             <form method="{% if form.instance.id %}PUT{% else %}POST{% endif %}"
-                action="{% if form.instance.id %}{% url 'api/clients' form.instance.id %}{% else %}{% url 'api/clients' %}{% endif %}">
+                action="{% if form.instance.id %}{% url 'api/orders' form.instance.id %}{% else %}{% url 'api/orders' %}{% endif %}">
                 {% for field in form %}
                 <div class="form-group mb-4">
                     {{ field.label_tag }}{{ field }}
                 </div>
                 {% endfor %}
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-block btn-primary save-client">
+                    <button type="submit" class="btn btn-block btn-primary save-order">
                         {% if form.instance.id %}Обновить{% else %}Создать{% endif %}
                     </button>
                 </div>

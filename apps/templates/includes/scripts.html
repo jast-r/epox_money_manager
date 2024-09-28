@@ -14,12 +14,22 @@
 <script src="{% static 'assets/vendor/notyf/notyf.min.js' %}"></script>
 <script type="application/javascript" src="{% static 'assets/js/notify.js' %}"></script>
 
+{% if 'clients' in segment %}
 <script type="application/javascript" src="{% static 'clients_assets/js/clients_script.js' %}"></script>
+{% endif %}
+
+{% if 'products' in segment %}
 <script type="application/javascript" src="{% static 'products_assets/js/products_script.js' %}"></script>
+{% endif %}
+
+{% if 'orders' in segment %}
+<script type="application/javascript" src="{% static 'orders_assets/js/orders_script.js' %}"></script>
+{% endif %}
+
 <script>
   {% if messages %}
-  {% for message in messages %}
-  notification['{{ message.tags }}']("<p>" + '{{ message|capfirst }}' + "</p>");
-  {% endfor %}
+    {% for message in messages %}
+      notification['{{ message.tags }}']("<p>" + '{{ message|capfirst }}' + "</p>");
+    {% endfor %}
   {% endif %}
 </script>

@@ -10,11 +10,10 @@ from apps.products.models import Product
 # Create your models here.
 
 class Order(models.Model):
-    PRIORITIES = {
-        1: "Не срочно",
-        2: "Средне",
-        3: "Срочно",
-    }
+    class Priority(models.IntegerChoices):
+        NOT_URGENT = 1, "Не срочно"
+        MEDIUM = 2, "Средне"
+        URGENT = 3, "Срочно"
 
     id = models.AutoField(primary_key=True)
     client = models.ForeignKey(Client, null=True, on_delete=models.SET_NULL)
@@ -23,9 +22,10 @@ class Order(models.Model):
     sell_price = models.FloatField(null=False, blank=False)
     address = models.TextField(null=False, blank=False)
     description = models.TextField(null=True, blank=True)
+    priority = models.IntegerField(choices=Priority.choices, default=Priority.NOT_URGENT)
     created_at = models.DateTimeField(auto_now_add=True)
-    priority = models.IntegerField(null=False, blank=False)
     updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     
     class Meta:
         db_table = "apps_orders"

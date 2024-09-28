@@ -14,6 +14,7 @@ class Client(models.Model):
     phone = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table = "apps_clients"

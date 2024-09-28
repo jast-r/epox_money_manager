@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, QueryDict
 from django.template.loader import render_to_string
@@ -12,10 +11,20 @@ from apps.orders.models import Order
 from apps.utils import form_validation_error
 
 def Orders(request):
-    orders = Order.objects.all()
+    orders = Order.objects.filter(deleted_at=None).order_by('id').all()
     context = {
         'segment': 'orders',
         'orders': orders,
+    }
+
+    return render(request, 'orders/orders.html', context)
+
+
+def DeleteOrder(request, pk):
+    Order.objects.filter(pk=pk).delete()
+
+    context = {
+        'segment': 'orders',
     }
 
     return render(request, 'orders/orders.html', context)
@@ -53,6 +62,11 @@ class OrderView(View):
         else:
             response = {'valid': 'error', 'message': form_validation_error(form)}
 
+        return JsonResponse(response)
+
+    def delete(self, request, pk=None, action=None):
+        Order.objects.filter(pk=pk).update(deleted_at=timezone.now())
+        response = {'valid': 'success', 'message': 'Заказ удален успешно.'}
         return JsonResponse(response)
 
     def get_create_form(self, pk=None):
