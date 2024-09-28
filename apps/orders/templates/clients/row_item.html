@@ -1,9 +1,16 @@
 <tr>
-    <td class="text-center"><b>{{ client.id }}</b></th>
-    <td class="text-center">{{ client.name }}</td>
-    <td class="text-center">{{ client.tg_username }}</td>
-    <td class="text-center">{{ client.phone }}</td>
+    <td class="text-center"><b>{{ order.id }}</b></th>
+    <td class="text-center">{{ order.client }}</td>
+    <td class="text-center">{{ order.product }}</td>
+    <td class="text-center">{{ order.quantity }}</td>
+    <td class="text-center">{{ order.sell_price }} ₽</td>
+    <td class="text-center">{{ order.address }}</td>
+    <td class="text-center">{{ order.description }}</td>
+    <td class="text-center">{{ order.created_at }}</td>
     <td class="text-center">
-        <a href="{% url 'api/clients' client.id %}" class="get-client-form">Изменить</a>
+        <a href="{% url 'api/orders' order.id %}" class="get-order-form">Изменить</a>
+    </td>
+    <td class="text-center">
+        <a href="{% url 'api/orders' order.id %}" class="get-order-form">Удалить</a>
     </td>
 </tr>

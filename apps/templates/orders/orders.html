@@ -12,53 +12,49 @@
 
   <div class="row">
     <div class="col-xl-12">
-      <div class="card" id="clientsList">
+      <div class="card" id="ordersList">
         <div class="card-header border-0">
           <div class="row align-items-center">
             <div class="col">
-              <h3 class="mb-0">Клиенты</h3>
+              <h3 class="mb-0">Заказы</h3>
             </div>
             <div class="col text-end">
               {#  <form action="">{% csrf_token %}</form> #}
-              <a class="btn bg-gradient-dark mb-0 ms-auto get-client-form" href="{% url 'api/clients' %}">
-                <i class="fas fa-plus me-2"></i>Новый клиент
+              <a class="btn bg-gradient-dark mb-0 ms-auto get-order-form" href="{% url 'api/orders' %}">
+                <i class="fas fa-plus me-2"></i>Новый заказ
               </a>
             </div>
           </div>
         </div>
         <div class="table-responsive">
-          <!-- Clients table -->
-          <table class="table align-items-center table-flush clients-list">
+          <!-- Orders table -->
+          <table class="table align-items-center table-flush orders-list">
             <thead class="thead-light">
               <tr>
                 <th class="text-center" scope="col">ID</th>
-                <th class="text-center" scope="col">Имя</th>
-                <th class="text-center" scope="col">Ник в тг</th>
-                <th class="text-center" scope="col">Номер телефона</th>
+                <th class="text-center" scope="col">Клиент</th>
+                <th class="text-center" scope="col">Продукт</th>
+                <th class="text-center" scope="col">Количество</th>
+                <th class="text-center" scope="col">Цена продажи</th>
+                <th class="text-center" scope="col">Адрес</th>
+                <th class="text-center" scope="col">Комментарий</th>
+                <th class="text-center" scope="col">Приоритет</th>
+                <th class="text-center" scope="col"> &nbsp;</th>
                 <th class="text-center" scope="col"> &nbsp;</th>
               </tr>
             </thead>
             <tbody>
-              {% if clients %}
-                {% for client in clients %}
-                <tr>
-                  <td class="text-center"><b>{{ client.id }}</b></th>
-                  <td class="text-center">{{ client.name }}</td>
-                  <td class="text-center">{{ client.tg_username }}</td>
-                  <td class="text-center">{{ client.phone }}</td>
-                  <td class="text-center">
-                    <a href="{% url 'api/clients' client.id %}" class="get-client-form">Изменить</a>
-                  </td>
-                </tr>
+              {% if orders %}
+                {% for order in orders %}
+                  {% include "orders/row_item.html" %}
                 {% endfor %}
               {% endif %}
             </tbody>
           </table>
 
-          {% if clients %}
-          {{ clients.pagination }}
+          {% if orders %}
+            {{ orders.pagination }}
           {% endif %}
-
         </div>
       </div>
     </div>
