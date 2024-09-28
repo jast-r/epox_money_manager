@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   appseed-app:
     container_name: appseed_app
@@ -8,6 +7,8 @@ services:
     networks:
       - db_network
       - web_network
+    volumes:
+      - ./app:/app
   nginx:
     container_name: nginx
     restart: always
@@ -25,4 +26,3 @@ networks:
     driver: bridge
   web_network:
     driver: bridge
- 
