@@ -4,6 +4,8 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.db import models
+from django.utils import timezone
+from django.db.models import Sum, F, ExpressionWrapper, FloatField
 
 # Create your models here.
 
@@ -20,5 +22,19 @@ class Client(models.Model):
         db_table = "apps_clients"
         verbose_name = "client"
         verbose_name_plural = "clients"
+
+    @classmethod
+    def today_clients(cls):
+        # Получаем локальное время для начала и конца текущего дня
+        local_now = timezone.localtime()
+        start_of_day = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = local_now.replace(hour=23, minute=59, second=59, microsecond=999999)
+        
+        result = cls.objects.filter(
+            created_at__range=(start_of_day, end_of_day),
+            deleted_at=None
+        ).count()
+        
+        return result
 
     

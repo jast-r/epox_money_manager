@@ -30,7 +30,7 @@ class OrderForm(forms.ModelForm):
         })
     )
     sell_price = forms.FloatField(
-        label="Цена продажи",
+        label="Общая сумма заказа",
         widget=forms.NumberInput(attrs={
             'class': 'form-control order',
             'autocomplete': ''

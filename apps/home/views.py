@@ -8,11 +8,19 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
+from apps.clients.models import Client
+from apps.orders.models import Order
 
 
 @login_required(login_url="/login/")
 def index(request):
     context = {'segment': 'index'}
+
+    context['today_clients'] = Client.today_clients()
+    context['today_orders'] = Order.today_orders()
+    context['today_revenue'] = Order.today_revenue()
+    context['today_profit'] = Order.today_profit()
+
 
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
@@ -29,6 +37,13 @@ def pages(request):
         if load_template == 'admin':
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
+        
+        if load_template == 'index.html':
+            context['today_clients'] = Client.today_clients()
+            context['today_orders'] = Order.today_orders()
+            context['today_revenue'] = Order.today_revenue()
+            context['today_profit'] = Order.today_profit()
+
 
         html_template = loader.get_template('home/' + load_template)
         return HttpResponse(html_template.render(context, request))

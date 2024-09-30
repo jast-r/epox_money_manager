@@ -7,8 +7,9 @@ services:
     networks:
       - db_network
       - web_network
-    volumes:
-      - ./app:/app
+    ports:
+      - "5005:5005"  # Пробросим порт 5005 для Gunicorn
+
   nginx:
     container_name: nginx
     restart: always
@@ -21,6 +22,21 @@ services:
       - web_network
     depends_on: 
       - appseed-app
+
+  ngrok:
+    image: ngrok/ngrok
+    container_name: ngrok
+    depends_on:
+      - appseed-app
+    environment:
+      NGROK_AUTHTOKEN: "2XWRYI678AX94KVSwTpKS3o36sD_57iutsiwFMTWLFrp61sn"
+      NGROK_PORT: "appseed_app:5005"  # Пробросим порт 5005 для ngrok
+    ports:
+      - "4040:4040" # для веб-интерфейса  
+    networks:
+      - web_network  # Используем одну и ту же сеть
+    command: "http appseed-app:5005"
+
 networks:
   db_network:
     driver: bridge

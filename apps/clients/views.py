@@ -68,3 +68,5 @@ class ClientView(View):
     def get_object(self, pk):
         client = Client.objects.get(id=pk)
         return client
+    
+    

@@ -9,15 +9,8 @@ class ProductForm(forms.ModelForm):
             'autocomplete': ''  
         })
     )
-    description = forms.CharField(
-        label="Описание продукта",
-        widget=forms.TextInput(attrs={
-            'class': 'form-control product',
-            'autocomplete': ''  
-        })
-    )
     price = forms.FloatField(
-        label="Цена",
+        label="Себестоимость",
         widget=forms.TextInput(attrs={
             'class': 'form-control product',
             'autocomplete': ''  
@@ -33,4 +26,4 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['name', 'description', 'type', 'price']
+        fields = ['name', 'type', 'price']

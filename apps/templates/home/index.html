@@ -19,8 +19,7 @@
               <div class="numbers">
                 <p class="text-sm mb-0 font-weight-bold">Заказов сегодня</p>
                 <h5 class="font-weight-bolder mb-0">
-                  $53,000
-                  <span class="text-success text-sm font-weight-bolder">+55%</span>
+                  {% if today_orders %} {{ today_orders }} {% else %} 0 {% endif %}
                 </h5>
               </div>
             </div>
@@ -41,8 +40,7 @@
               <div class="numbers">
                 <p class="text-sm mb-0 font-weight-bold">Клиентов сегодня</p>
                 <h5 class="font-weight-bolder mb-0">
-                  2,300
-                  <span class="text-success text-sm font-weight-bolder">+3%</span>
+                  {% if today_clients %} {{ today_clients }} {% else %} 0 {% endif %}
                 </h5>
               </div>
             </div>
@@ -63,8 +61,7 @@
               <div class="numbers">
                 <p class="text-sm mb-0 font-weight-bold">Выручка сегодня</p>
                 <h5 class="font-weight-bolder mb-0">
-                  +3,462
-                  <span class="text-danger text-sm font-weight-bolder">-2%</span>
+                  {% if today_revenue %} {{ today_revenue }} {% else %} 0 {% endif %} ₽
                 </h5>
               </div>
             </div>
@@ -85,8 +82,7 @@
               <div class="numbers">
                 <p class="text-sm mb-0 font-weight-bold">Прибыль сегодня</p>
                 <h5 class="font-weight-bolder mb-0">
-                  $103,430
-                  <span class="text-success text-sm font-weight-bolder">+5%</span>
+                  {% if today_profit %} {{ today_profit }} {% else %} 0 {% endif %} ₽
                 </h5>
               </div>
             </div>
