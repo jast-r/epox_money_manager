@@ -21,7 +21,8 @@ class ProductForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'class': 'form-control product',
             'autocomplete': ''  
-        })
+        }),
+        required=False,
     )
 
     class Meta:

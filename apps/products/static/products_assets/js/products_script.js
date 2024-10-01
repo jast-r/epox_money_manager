@@ -66,7 +66,7 @@ function AjaxPOSTProductForm(params) {
                 if (params['method'] === 'PUT')
                     $('.products-list').find(".get-product-form[href='" + params['url'] + "']").closest('tr').replaceWith(data.item);
                 else
-                    $('.product-list tbody').append(data.item);
+                    $('.product-list tbody').prepend(data.item);
                 modal.modal('hide');
 
                 setTimeout(function () {

@@ -66,7 +66,8 @@ class OrderForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'class': 'form-control order',
             'autocomplete': ''
-        })
+        }),
+        required=False,
     )
     priority = forms.ChoiceField(
         label="Приоритет",
