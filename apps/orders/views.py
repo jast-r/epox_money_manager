@@ -11,7 +11,7 @@ from apps.orders.models import Order
 from apps.utils import form_validation_error
 
 def Orders(request):
-    orders = Order.objects.filter(deleted_at=None).order_by('id').all()
+    orders = Order.objects.filter(deleted_at=None).order_by('-id').all()
     context = {
         'segment': 'orders',
         'orders': orders,
@@ -49,6 +49,7 @@ class OrderView(View):
             response = {'valid': 'success', 'message': 'Новый заказ создан успешно.', 'item': item}
         else:
             response = {'valid': 'error', 'message': form_validation_error(form)}
+
         return JsonResponse(response)
 
     def put(self, request, pk=None, action=None):

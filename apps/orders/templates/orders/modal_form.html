@@ -1,19 +1,78 @@
 <div class="modal-body p-0">
     <div class="card p-4">
-        <button type="button" class="btn-close bg-black" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- <button type="button" class="btn-close-white" data-bs-dismiss="modal" aria-label="Close">Close</button> -->
         <div class="card-header border-0 text-center pb-0">
-            <h2 class="mb-0">{% if form.instance.id %}Редактирование заказа {{ form.instance.id }}{% else %}Новый заказ{% endif %}</h2>
+            <h2 class="mb-0">{% if form.instance.id %}Редактирование заказа {{ form.instance.id }}{% else %}Новый
+                заказ{% endif %}</h2>
         </div>
         <div class="card-body">
             <!-- Form -->
             <form method="{% if form.instance.id %}PUT{% else %}POST{% endif %}"
                 action="{% if form.instance.id %}{% url 'api/orders' form.instance.id %}{% else %}{% url 'api/orders' %}{% endif %}">
-                {% for field in form %}
-                <div class="form-group mb-4">
-                    {{ field.label_tag }}{{ field }}
+                <div class="container-fluid p-0">
+                    <div class="row clients">
+                        <div class="col p-1">
+                            <div class="text-center">
+                                <h4>Клиент</h4>
+                            </div>
+                            <div class="form-group mb-4">
+                                {{ form.client_fio.label_tag }}{{ form.client_fio }}
+                            </div>
+                            <div class="form-group mb-4">
+                                {{ form.client_tg.label_tag }}{{ form.client_tg }}
+                            </div>
+                            <div class="form-group mb-4">
+                                {{ form.client_phone.label_tag }}{{ form.client_phone }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row product">
+                        <div class="col p-1">
+                            <div class="text-center">
+                                <h4>Продукт</h4>
+                            </div>
+                            <div class="row product-group">
+                                <div class="col-5 p-1">
+                                    <div class="form-group mb-4 product_name">
+                                        {{ form.product.label_tag }}{{ form.product }}
+                                    </div>
+                                </div>
+                                <div class="col p-1">
+                                    <div class="form-group mb-4 product_quantity">
+                                        {{ form.quantity.label_tag }}{{ form.quantity }}
+                                    </div>
+                                </div>
+                                <div class="col p-1">
+                                    <div class="form-group mb-4 product_sell_price">
+                                        {{ form.sell_price.label_tag }}{{ form.sell_price }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-grid mt-0 p-0">
+                                <button type="button" class="btn btn-block btn-secondary add-product-into-order">
+                                    Добавить позицию
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row details">
+                        <div class="col p-1">
+                            <div class="text-center">
+                                <h4>Детали заказа</h4>
+                            </div>
+                            <div class="form-group mb-4">
+                                {{ form.address.label_tag }}{{ form.address }}
+                            </div>
+                            <div class="form-group mb-4">
+                                {{ form.description.label_tag }}{{ form.description }}
+                            </div>
+                            <div class="form-group mb-4">
+                                {{ form.priority.label_tag }}{{ form.priority }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {% endfor %}
-                <div class="d-grid">
+                <div class="d-grid mt-3 p-0">
                     <button type="submit" class="btn btn-block btn-primary save-order">
                         {% if form.instance.id %}Обновить{% else %}Создать{% endif %}
                     </button>

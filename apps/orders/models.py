@@ -17,9 +17,16 @@ class Order(models.Model):
         MEDIUM = 2, "Средне"
         URGENT = 3, "Срочно"
 
+    class Status(models.IntegerChoices):
+        ACCEPTED = 1, "Принят"
+        IN_PROGRESS = 2, "В процессе"
+        DONE = 3, "Выполнен"
+
     id = models.AutoField(primary_key=True)
-    client = models.ForeignKey(Client, null=True, on_delete=models.SET_NULL)
-    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+    client_fio = models.CharField(max_length=100, null=True, blank=True)
+    client_tg = models.CharField(max_length=100, null=True, blank=True)
+    client_phone = models.CharField(max_length=100, null=True, blank=True)
+    product = models.ForeignKey(Product, null=False, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=False, blank=False)
     sell_price = models.FloatField(null=False, blank=False)
     address = models.TextField(null=False, blank=False)
@@ -62,7 +69,6 @@ class Order(models.Model):
         
         return result.get('today_revenue', 0.0)  # Вернуть 0.0, если нет данных
     
-    @classmethod
     @classmethod
     def today_profit(cls):
         # Получаем локальное время для начала и конца текущего дня
