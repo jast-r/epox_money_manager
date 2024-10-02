@@ -32,6 +32,7 @@ class Order(models.Model):
     address = models.TextField(null=False, blank=False)
     description = models.TextField(null=True, blank=True)
     priority = models.IntegerField(choices=Priority.choices, default=Priority.NOT_URGENT)
+    status = models.IntegerField(choices=Status.choices, default=Status.ACCEPTED)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)

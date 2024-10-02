@@ -63,7 +63,7 @@ class OrderForm(forms.ModelForm):
     )
     description = forms.CharField(
         label="Описание",
-        widget=forms.TextInput(attrs={
+        widget=forms.Textarea(attrs={
             'class': 'form-control order',
             'autocomplete': ''
         }),
@@ -72,10 +72,18 @@ class OrderForm(forms.ModelForm):
     priority = forms.ChoiceField(
         label="Приоритет",
         widget=forms.Select(attrs={
-            'class': 'form-control order',
+            'class': 'form-select order',
             'autocomplete': ''
         }),
         choices=Order.Priority.choices
+    )
+    status = forms.ChoiceField(
+        label="Статус",
+        widget=forms.Select(attrs={
+            'class': 'form-select order',
+            'autocomplete': ''
+        }),
+        choices=Order.Status.choices
     )
 
     class Meta:
@@ -90,6 +98,7 @@ class OrderForm(forms.ModelForm):
             'address', 
             'description', 
             'priority',
+            'status'
         ]
 
     # Переопределяем отображаемое значение для поля client и product

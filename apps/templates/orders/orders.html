@@ -4,8 +4,14 @@
 {% block title %} Заказы {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
-
+{% block stylesheets %}
+<style>
+table {
+    border-collapse: collapse; /* Убирает пространство между ячейками */
+    border-spacing: 0; /* Устанавливает расстояние между ячейками на 0 */
+}
+</style>
+{% endblock stylesheets %}
 {% block content %}
 
 <div class="container-fluid py-4">
@@ -28,14 +34,14 @@
         </div>
         <div class="table-responsive">
           <!-- Orders table -->
-          <table class="table align-items-center table-flush orders-list">
+          <table class="table table-borderless align-items-center table-flush orders-list">
             <thead class="thead-light">
               <tr>
                 <th class="text-center" scope="col">ФИО</th>
-                <th class="text-center" scope="col">Тг</th>
+                <th class="text-center" scope="col">ТГ</th>
                 <th class="text-center" scope="col">Номер</th>
                 <th class="text-center" scope="col">Продукт</th>
-                <th class="text-center" scope="col">Количество</th>
+                <th class="text-center" scope="col">Штук</th>
                 <th class="text-center" scope="col">Цена</th>
                 <th class="text-center" scope="col">Адрес</th>
                 <th class="text-center" scope="col">Комментарий</th>

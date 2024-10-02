@@ -10,7 +10,7 @@ $(function () {
         params['url'] = url;
         AjaxGETOrderForm(params);
     });
-
+    
     $('#ordersList').on('click', '.delete-order', function (event) {
         event.preventDefault();
         var btn = $(this);

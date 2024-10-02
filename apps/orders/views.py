@@ -12,6 +12,16 @@ from apps.utils import form_validation_error
 
 def Orders(request):
     orders = Order.objects.filter(deleted_at=None).order_by('-id').all()
+
+    for order in orders:
+        order.client_fio = order.client_fio.replace(' ', '\n')
+        parts = [part.strip() for part in order.address.split(',')]
+            
+        if len(parts) >= 2:
+            order.address = ', '.join(parts[:2]) + '\n' + ', '.join(parts[2:])
+        else:
+            order.address = order.address
+
     context = {
         'segment': 'orders',
         'orders': orders,
