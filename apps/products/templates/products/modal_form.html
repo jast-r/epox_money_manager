@@ -1,6 +1,9 @@
 <div class="modal-body p-0">
     <div class="card p-4">
-        <button type="button" class="btn-close bg-black" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="d-grid justify-content-md-end">
+            <button type="button" class="btn-close align-items-end" data-bs-dismiss="modal"
+                aria-label="Close">X</button>
+        </div>
         <div class="card-header border-0 text-center pb-0">
             <h2 class="mb-0">{% if form.instance.id %}Редактирование продукта {{ form.instance.name }}{% else %}Новый продукт{% endif %}</h2>
         </div>

@@ -7,7 +7,10 @@ from django.db import models
 from apps.clients.models import Client
 from apps.products.models import Product
 from django.utils import timezone
-from django.db.models import Sum, F, ExpressionWrapper, FloatField
+from django.db.models import Sum, F, ExpressionWrapper, FloatField, Window
+from django.db.models.functions import TruncDate, TruncDay, TruncWeek, TruncMonth
+from django.utils import timezone
+import datetime
 
 # Create your models here.
 
@@ -89,3 +92,42 @@ class Order(models.Model):
         ).aggregate(today_profit=Sum(profit_expr))
         
         return result.get('today_profit', 0.0)  # Вернуть 0.0, если данных нет
+    
+    @classmethod
+    def _get_date_range(cls, period, default_days):
+        """Вспомогательный метод для получения диапазона дат"""
+        end_date = timezone.now()
+        start_date = end_date - datetime.timedelta(days=default_days)
+        return start_date, end_date
+
+    @classmethod
+    def _aggregate_data(cls, start_date, end_date):
+        """Общий метод для агрегации данных"""
+        base_query = cls.objects.filter(
+            created_at__range=(start_date, end_date),
+            deleted_at=None
+        )
+               
+        return base_query.annotate(
+                    item_profit=F('sell_price') - F('product__price') * F('quantity')
+                ).values('created_at').annotate(
+                    revenue=Sum('sell_price'),
+                    profit=Sum('item_profit')
+                ).order_by('created_at')
+
+    @classmethod
+    def _get_data_for_period(cls, period, start_date=None, end_date=None):
+        """Метод для получения данных за определенный период"""
+        if period == 'week':
+            default_days = 7
+        elif period == 'month':
+            default_days = 30
+        elif period == 'year':
+            default_days = 365
+        else:
+            raise ValueError("Неверный тип периода")
+
+        if not start_date or not end_date:
+            start_date, end_date = cls._get_date_range(period, default_days)
+
+        return cls._aggregate_data(start_date, end_date)
