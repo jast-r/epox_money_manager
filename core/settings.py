@@ -89,7 +89,7 @@ DATABASES = {
     'NAME'    : os.getenv('DB_NAME'     , 'epox_money_manager'),
     'USER'    : os.getenv('DB_USERNAME' , 'postgres'),
     'PASSWORD': os.getenv('DB_PASS'     , 'superSecretPassword'),
-    'HOST'    : os.getenv('DB_HOST'     , 'localhost'),
+    'HOST'    : os.getenv('DB_HOST'     , 'postgres'),
     'PORT'    : os.getenv('DB_PORT'     , 5432),
     }, 
 }

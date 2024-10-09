@@ -1,21 +1,27 @@
 services:
-  appseed-app:
-    container_name: appseed_app
+  epox-money-manager:
+    container_name: epox_money_manager
     restart: always
     env_file: .env
     build: .
     networks:
-      - db_network
-      - web_network
+      - app_network
     ports:
       - "5005:5005"  # Пробросим порт 5005 для Gunicorn
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:5005"
 
   postgres:
     container_name: postgres
     restart: always
     image: "postgres:latest"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 2s
+      retries: 5
     environment:
       POSTGRES_DB: "epox_money_manager"
       POSTGRES_USER: "postgres"
@@ -25,37 +31,22 @@ services:
     volumes:
       - ./postgres:/var/lib/postgresql/data
     networks:
-      - db_network
-
-  nginx:
-    container_name: nginx
-    restart: always
-    image: "nginx:latest"
-    ports:
-      - "5085:5085"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-    networks:
-      - web_network
-    depends_on: 
-      - appseed-app
+      - app_network
 
   ngrok:
     image: ngrok/ngrok
     container_name: ngrok
     depends_on:
-      - appseed-app
+      - epox-money-manager
     environment:
       NGROK_AUTHTOKEN: "2XWRYI678AX94KVSwTpKS3o36sD_57iutsiwFMTWLFrp61sn"
       NGROK_PORT: "appseed_app:5005"  # Пробросим порт 5005 для ngrok
     ports:
       - "4040:4040" # для веб-интерфейса  
     networks:
-      - web_network  # Используем одну и ту же сеть
+      - app_network  # Используем одну и ту же сеть
     command: "http appseed-app:5005"
 
 networks:
-  db_network:
-    driver: bridge
-  web_network:
+  app_network:
     driver: bridge
