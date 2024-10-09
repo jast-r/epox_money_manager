@@ -4,22 +4,24 @@
 
 <script src="{{ ASSETS_ROOT }}/js/plugins/perfect-scrollbar.min.js"></script>
 <script src="{{ ASSETS_ROOT }}/js/plugins/smooth-scrollbar.min.js"></script>
+<script src="{{ ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
 
 <script src="{{ ASSETS_ROOT }}/js/dark-mode-handler.js"></script>
 
 {% load static %}
 
+<script src="{% static 'orders_assets/js/charts.js' %}"></script>
 <script src="{% static 'assets/vendor/js-cookie/dist/js.cookie.js' %}"></script>
 <script src="{% static 'assets/vendor/jquery/dist/jquery.min.js' %}"></script>
 <script src="{% static 'assets/vendor/notyf/notyf.min.js' %}"></script>
-<script type="application/javascript" src="{% static 'assets/js/notify.js' %}"></script>
+<script src="{% static 'assets/js/notify.js' %}"></script>
 
 {% if 'products' in segment %}
-<script type="application/javascript" src="{% static 'products_assets/js/products_script.js' %}"></script>
+<script src="{% static 'products_assets/js/forms.js' %}"></script>
 {% endif %}
 
 {% if 'orders' in segment %}
-<script type="application/javascript" src="{% static 'orders_assets/js/orders_script.js' %}"></script>
+<script src="{% static 'orders_assets/js/forms.js' %}"></script>
 {% endif %}
 
 <script>

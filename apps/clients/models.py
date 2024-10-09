@@ -26,9 +26,9 @@ class Client(models.Model):
     @classmethod
     def today_clients(cls):
         # Получаем локальное время для начала и конца текущего дня
-        local_now = timezone.localtime()
-        start_of_day = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = local_now.replace(hour=23, minute=59, second=59, microsecond=999999)
+        now = timezone.now()
+        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
         
         result = cls.objects.filter(
             created_at__range=(start_of_day, end_of_day),

@@ -27,12 +27,16 @@ CREATE TABLE IF NOT EXISTS apps_orders (
 
 # Функция для генерации случайной даты в этом году
 def random_date():
-    start_date = datetime(datetime.now().year, 1, 1)
+    start_date = datetime(datetime.now().year, 1, 1, 0, 0, 0, 0)
     end_date = datetime.now()
-    time_between_dates = end_date - start_date
-    days_between_dates = time_between_dates.days
-    random_number_of_days = random.randrange(days_between_dates)
-    return start_date + timedelta(days=random_number_of_days)
+    random_date = start_date + timedelta(
+        days=random.randint(0, (end_date - start_date).days),
+        hours=random.randint(0, 23),
+        minutes=random.randint(0, 59),
+        seconds=random.randint(0, 59),
+        microseconds=random.randint(0, 999999)
+    )
+    return random_date.strftime("%Y-%m-%d %H:%M:%S.%f")
 
 # Списки для генерации случайных данных
 products = [(1, 450), (2, 420), (3, 350)]
@@ -65,8 +69,8 @@ for _ in range(1000):
         f"{random.randint(1, 10)}",
         random.choice(priorities),
         random.choice(statuses),
-        date.isoformat(),
-        date.isoformat()
+        date,
+        date
     ))
 
 # Сохранение изменений и закрытие соединения

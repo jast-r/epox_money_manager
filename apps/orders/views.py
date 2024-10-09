@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta, date
 
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -45,20 +45,121 @@ def DeleteOrder(request, pk):
 
 
 def get_total_info(request):
-    period = request.GET.get('period', 'week')
-    total_info = Order._get_data_for_period(period)
+    """View для получения общей информации о прибыли и выручке за период"""
+    start_date = datetime.strptime(request.GET.get('start_date'), "%Y-%m-%d").date()
+    end_date = datetime.strptime(request.GET.get('end_date'), "%Y-%m-%d").date()
 
-    result = []
+    total_info = TotalInfoCalculator.get_total_info(start_date, end_date)
 
-    for item in total_info:
-        result.append({
-            "date": item['created_at'].strftime("%d.%m.%Y"),
-            "revenue": item.get('revenue') or 0,
-            "profit": item.get('profit') or 0,
-        })
+    if (360 <= (end_date - start_date).days <= 370):
+        total_info = TotalInfoCalculator.get_monthly_summary(total_info)
 
-    return JsonResponse({'data': result})
-    
+    period_revenue = sum(item['revenue'] for item in total_info)
+    period_profit = sum(item['profit'] for item in total_info)
+    period_orders = sum(item['orders_count'] for item in total_info)
+    period_customers = sum(item['customers_count'] for item in total_info)
+
+    return JsonResponse(
+        {
+            'data': total_info,
+            'period_revenue': period_revenue,
+            'period_profit': period_profit,
+            'period_orders': period_orders,
+            'period_customers': period_customers
+        }
+    )
+
+
+class TotalInfoCalculator:
+    month_names = {
+        1: "Янв.",
+        2: "Фев.",
+        3: "Март",
+        4: "Апр.",
+        5: "Май",
+        6: "Июнь",
+        7: "Июль",
+        8: "Авг.",
+        9: "Сен.",
+        10: "Окт.",
+        11: "Нояб.",
+        12: "Дек.",
+    }
+
+    @staticmethod
+    def get_total_info(start_date, end_date):
+        """Получение общей информации о прибыли и выручке за период"""
+        if not start_date or not end_date:
+            return []
+        
+        total_info = Order._get_data_for_period(start_date, end_date)
+        result = TotalInfoCalculator.format_result(total_info)
+        result = TotalInfoCalculator.fill_missing_dates(result, end_date)
+
+        return result
+
+    @staticmethod
+    def format_result(total_info):
+        result = []
+        for item in total_info:
+            result.append({
+                "date": item['created_at_date'],
+                "revenue": item['revenue'],
+                "profit": item['profit'],
+                "customers_count": item['customers_count'],
+                "orders_count": item['orders_count']
+            })
+
+        return result
+
+    @staticmethod
+    def fill_missing_dates(result, end_date):
+        """Заполнение отсутствующих дат"""
+        if not result:
+            return result
+        
+        last_date = result[-1]['date']
+        while last_date < end_date:
+            last_date += timedelta(days=1)
+            result.append({
+                "date": last_date,
+                "revenue": 0,
+                "profit": 0,
+                "customers_count": 0,
+                "orders_count": 0
+            })
+
+        return result
+
+    @staticmethod
+    def get_monthly_summary(data):
+        monthly_summary = {}
+        
+        for item in data:
+            month = item['date'].month
+            month_name = TotalInfoCalculator.month_names[month]
+
+            if month_name not in monthly_summary:
+                monthly_summary[month_name] = {"revenue": 0, "profit": 0, "customers_count": 0, "orders_count": 0}
+
+            monthly_summary[month_name]['revenue'] += item['revenue']
+            monthly_summary[month_name]['profit'] += item['profit']
+            monthly_summary[month_name]['customers_count'] += item['customers_count']
+            monthly_summary[month_name]['orders_count'] += item['orders_count']
+        monthly_summary = [
+            {
+                "month": month,
+                "revenue": data['revenue'],
+                "profit": data['profit'],
+                "customers_count": data['customers_count'],
+                "orders_count": data['orders_count']
+            }
+            for month, data in monthly_summary.items()
+        ]
+
+        return monthly_summary
+
+
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class OrderView(View):
     """Класс для обработки CRUD операций с заказами и расчета прибыли/выручки"""

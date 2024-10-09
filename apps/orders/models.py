@@ -4,13 +4,13 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.db import models
-from apps.clients.models import Client
 from apps.products.models import Product
 from django.utils import timezone
-from django.db.models import Sum, F, ExpressionWrapper, FloatField, Window
-from django.db.models.functions import TruncDate, TruncDay, TruncWeek, TruncMonth
+from django.db.models import Sum, F, ExpressionWrapper, FloatField, Count
+from django.db.models.functions import TruncDate
 from django.utils import timezone
-import datetime
+from datetime import datetime, time
+from django.utils import timezone
 
 # Create your models here.
 
@@ -48,9 +48,9 @@ class Order(models.Model):
     @classmethod
     def today_orders(cls):
         # Получаем локальное время для начала и конца текущего дня
-        local_now = timezone.localtime()
-        start_of_day = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = local_now.replace(hour=23, minute=59, second=59, microsecond=999999)
+        now = timezone.now()
+        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
         
         result = cls.objects.filter(
             created_at__range=(start_of_day, end_of_day),
@@ -62,9 +62,9 @@ class Order(models.Model):
     @classmethod
     def today_revenue(cls):
         # Получаем локальное время для начала и конца текущего дня
-        local_now = timezone.localtime()
-        start_of_day = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = local_now.replace(hour=23, minute=59, second=59, microsecond=999999)
+        now = timezone.now()
+        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
 
         result = cls.objects.filter(
             created_at__range=(start_of_day, end_of_day),
@@ -76,9 +76,9 @@ class Order(models.Model):
     @classmethod
     def today_profit(cls):
         # Получаем локальное время для начала и конца текущего дня
-        local_now = timezone.localtime()
-        start_of_day = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = local_now.replace(hour=23, minute=59, second=59, microsecond=999999)
+        now = timezone.now()
+        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
 
         # Рассчитываем прибыль как sell_price - product.price * quantity
         profit_expr = ExpressionWrapper(
@@ -104,30 +104,25 @@ class Order(models.Model):
     def _aggregate_data(cls, start_date, end_date):
         """Общий метод для агрегации данных"""
         base_query = cls.objects.filter(
-            created_at__range=(start_date, end_date),
+            created_at__gte=start_date,
+            created_at__lte=datetime.combine(end_date, time.max),
             deleted_at=None
         )
-               
-        return base_query.annotate(
-                    item_profit=F('sell_price') - F('product__price') * F('quantity')
-                ).values('created_at').annotate(
+
+        res = base_query.annotate(
+                    item_profit=F('sell_price') - F('product__price') * F('quantity'),
+                    created_at_date=TruncDate('created_at')
+                ).values('created_at_date').annotate(
                     revenue=Sum('sell_price'),
-                    profit=Sum('item_profit')
-                ).order_by('created_at')
+                    profit=Sum('item_profit'),
+                    orders_count=Count('client_phone'),
+                    customers_count=Count('client_phone', distinct=True)
+                ).order_by('created_at_date')\
+                
+        print(str(res.query))
+        
+        return res
 
     @classmethod
-    def _get_data_for_period(cls, period, start_date=None, end_date=None):
-        """Метод для получения данных за определенный период"""
-        if period == 'week':
-            default_days = 7
-        elif period == 'month':
-            default_days = 30
-        elif period == 'year':
-            default_days = 365
-        else:
-            raise ValueError("Неверный тип периода")
-
-        if not start_date or not end_date:
-            start_date, end_date = cls._get_date_range(period, default_days)
-
+    def _get_data_for_period(cls, start_date=None, end_date=None):
         return cls._aggregate_data(start_date, end_date)
