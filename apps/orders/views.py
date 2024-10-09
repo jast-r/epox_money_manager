@@ -10,10 +10,13 @@ from django.shortcuts import render, get_object_or_404
 
 from apps.orders.forms import OrderForm
 from apps.orders.models import Order
-from apps.utils import form_validation_error
+from apps.utils import form_validation_error, set_pagination
 
 def Orders(request):
-    """View для отображения всех заказов"""
+    context = {
+        'segment': 'orders',
+    }
+
     orders = Order.objects.filter(deleted_at=None).order_by('-id').all()
 
     # Форматирование данных для отображения
@@ -25,10 +28,7 @@ def Orders(request):
         else:
             order.address = order.address
 
-    context = {
-        'segment': 'orders',
-        'orders': orders,
-    }
+    context['orders'], context['info'] = set_pagination(request, orders, item_numer=10)
 
     return render(request, 'orders/orders.html', context)
 
@@ -94,7 +94,7 @@ class TotalInfoCalculator:
         
         total_info = Order._get_data_for_period(start_date, end_date)
         result = TotalInfoCalculator.format_result(total_info)
-        result = TotalInfoCalculator.fill_missing_dates(result, end_date)
+        result = TotalInfoCalculator.fill_missing_dates(result, start_date, end_date)
 
         return result
 
@@ -113,23 +113,39 @@ class TotalInfoCalculator:
         return result
 
     @staticmethod
-    def fill_missing_dates(result, end_date):
+    def fill_missing_dates(result, start_date, end_date):
         """Заполнение отсутствующих дат"""
         if not result:
             return result
-        
-        last_date = result[-1]['date']
-        while last_date < end_date:
-            last_date += timedelta(days=1)
-            result.append({
-                "date": last_date,
+
+        filled_result = []
+        current_date = start_date
+
+        for item in result:
+            while current_date < item['date']:
+                filled_result.append({
+                    "date": current_date,
+                    "revenue": 0,
+                    "profit": 0,
+                    "customers_count": 0,
+                    "orders_count": 0
+                })
+                current_date += timedelta(days=1)
+            
+            filled_result.append(item)
+            current_date = item['date'] + timedelta(days=1)
+
+        while current_date <= end_date:
+            filled_result.append({
+                "date": current_date,
                 "revenue": 0,
                 "profit": 0,
                 "customers_count": 0,
                 "orders_count": 0
             })
+            current_date += timedelta(days=1)
 
-        return result
+        return filled_result
 
     @staticmethod
     def get_monthly_summary(data):

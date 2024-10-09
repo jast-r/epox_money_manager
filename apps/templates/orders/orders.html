@@ -19,7 +19,7 @@ table {
   <div class="row">
     <div class="col-xl-12">
       <div class="card" id="ordersList">
-        <div class="card-header border-0">
+        <div class="card-header border-0 pb-2">
           <div class="row align-items-center">
             <div class="col">
               <h3 class="mb-0">Заказы</h3>
@@ -59,11 +59,11 @@ table {
               {% endif %}
             </tbody>
           </table>
-
-          {% if orders %}
-            {{ orders.pagination }}
-          {% endif %}
         </div>
+
+        {% if orders %}
+          {{ orders.pagination }}
+        {% endif %}
       </div>
     </div>
   </div>

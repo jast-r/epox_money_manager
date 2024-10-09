@@ -1,0 +1,83 @@
+{% block content %}
+<div class="col-lg-7">
+  <div class="card z-index-2">
+    <div class="card-header pb-0">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <h6 class="mb-0">Продажи</h6>
+        </div>
+        <div class="col text-center">
+          <div class="period-control-group d-inline-flex">
+            <button id="prevPeriod" class="btn btn-outline-primary btn-sm">
+              <i class="fas fa-angle-left"></i>
+            </button>
+            <input type="text" id="currentPeriod" class="form-control form-control-sm text-center" readonly>
+            <button id="nextPeriod" class="btn btn-outline-primary btn-sm">
+              <i class="fas fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-auto">
+          <select id="timePeriod" class="form-select form-select-sm">
+            <option value="week">За неделю</option>
+            <option value="month">За месяц</option>
+            <option value="year">За год</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- Line Chart -->
+    <div class="card-body">
+      <!-- Chart -->
+      <div class="chart">
+        <!-- Chart wrapper -->
+        <canvas id="salesChart" class="chart-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col">
+      <div class="card">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <p class="text-sm mb-0 font-weight-bold">Выручка за период</p>
+                <h5 class="period-revenue font-weight-bolder mb-0">
+                  {% if period_revenue %} {{ period_revenue }} {% else %} 0 {% endif %} ₽
+                </h5>
+              </div>
+            </div>
+            <div class="col-4 text-end">
+              <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                <i class="fa fa-coins text-lg opacity-10" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <p class="text-sm mb-0 font-weight-bold">Прибыль за период</p>
+                <h5 class="period-profit font-weight-bolder mb-0">
+                  {% if period_profit %} {{ period_profit }} {% else %} 0 {% endif %} ₽
+                </h5>
+              </div>
+            </div>
+            <div class="col-4 text-end">
+              <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                <i class="fa fa-wallet text-lg opacity-10" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

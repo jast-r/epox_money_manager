@@ -46,54 +46,6 @@ class Order(models.Model):
         verbose_name_plural = "orders"
 
     @classmethod
-    def today_orders(cls):
-        # Получаем локальное время для начала и конца текущего дня
-        now = timezone.now()
-        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
-        
-        result = cls.objects.filter(
-            created_at__range=(start_of_day, end_of_day),
-            deleted_at=None
-        ).count()
-        
-        return result
-    
-    @classmethod
-    def today_revenue(cls):
-        # Получаем локальное время для начала и конца текущего дня
-        now = timezone.now()
-        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
-
-        result = cls.objects.filter(
-            created_at__range=(start_of_day, end_of_day),
-            deleted_at=None
-        ).aggregate(today_revenue=Sum('sell_price'))
-        
-        return result.get('today_revenue', 0.0)  # Вернуть 0.0, если нет данных
-    
-    @classmethod
-    def today_profit(cls):
-        # Получаем локальное время для начала и конца текущего дня
-        now = timezone.now()
-        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
-
-        # Рассчитываем прибыль как sell_price - product.price * quantity
-        profit_expr = ExpressionWrapper(
-            F('sell_price') - F('product__price') * F('quantity'),
-            output_field=FloatField()
-        )
-        
-        result = cls.objects.filter(
-            created_at__range=(start_of_day, end_of_day),
-            deleted_at=None
-        ).aggregate(today_profit=Sum(profit_expr))
-        
-        return result.get('today_profit', 0.0)  # Вернуть 0.0, если данных нет
-    
-    @classmethod
     def _get_date_range(cls, period, default_days):
         """Вспомогательный метод для получения диапазона дат"""
         end_date = timezone.now()
@@ -118,9 +70,7 @@ class Order(models.Model):
                     orders_count=Count('client_phone'),
                     customers_count=Count('client_phone', distinct=True)
                 ).order_by('created_at_date')\
-                
-        print(str(res.query))
-        
+                        
         return res
 
     @classmethod

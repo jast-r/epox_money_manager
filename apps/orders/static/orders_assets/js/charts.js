@@ -35,22 +35,22 @@ function formatDateForDjango(date) {
 }
 
 function drawCharts(data, labels) {
-    createChart('salesChart', data, labels, 
-        ['revenue', 'profit'], 
-        ['Выручка', 'Прибыль'], 
-        ['rgb(0, 18, 176)', 'rgb(0, 176, 18)'], 
+    createChart('salesChart', data, labels,
+        ['revenue', 'profit'],
+        ['Выручка', 'Прибыль'],
+        ['rgb(0, 18, 176)', 'rgb(0, 176, 18)'],
         'line'
     );
-    createChart('customersChart', data, labels, 
-        ['customers_count'], 
-        ['Клиенты'], 
-        ['rgb(75, 192, 192)'], 
+    createChart('customersChart', data, labels,
+        ['customers_count'],
+        ['Клиенты'],
+        ['rgb(75, 192, 192)'],
         'bar'
     );
 }
 
-function createChart(chartId, chartData, labels, dataKeys, dataLabels, colors, type) {
-    const ctx = document.getElementById(chartId).getContext('2d');
+function createChart(chartName, chartData, labels, dataKeys, dataLabels, colors, type) {
+    const ctx = document.getElementById(chartName).getContext('2d');
     const datasets = dataKeys.map((key, index) => ({
         label: dataLabels[index],
         data: chartData.map(item => item[key]),
@@ -67,21 +67,24 @@ function createChart(chartId, chartData, labels, dataKeys, dataLabels, colors, t
             plugins: { legend: { display: false } },
             responsive: true,
             scales: {
-                y: { beginAtZero: true },
-                x: { grid: { display: false } }
-            },
-            tooltips: {
-                callbacks: {
-                    label: function (item, data) {
-                        const label = data.datasets[item.datasetIndex].label || '';
-                        const yLabel = item.yLabel;
-                        return data.datasets.length > 1 ? `${label}: ${yLabel}` : yLabel;
-                    }
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: chartName === 'salesChart' ? 200 : 1 }
+                },
+                x: { grid: { display: chartName === 'salesChart' } }
+            }
+        },
+        tooltips: {
+            callbacks: {
+                label: function (item, data) {
+                    const label = data.datasets[item.datasetIndex].label || '';
+                    const yLabel = item.yLabel;
+                    return data.datasets.length > 1 ? `${label}: ${yLabel}` : yLabel;
                 }
             }
         }
     });
 
-    if (chartId === 'salesChart') salesChart = chart;
-    if (chartId === 'customersChart') customersChart = chart;
+    if (chartName === 'salesChart') salesChart = chart;
+    if (chartName === 'customersChart') customersChart = chart;
 }

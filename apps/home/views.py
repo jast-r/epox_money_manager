@@ -8,20 +8,16 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from apps.clients.models import Client
 from apps.orders.models import Order
-
+from datetime import datetime
+import pytz
 
 @login_required(login_url="/login/")
 def index(request):
     context = {'segment': 'index'}
 
-    context['today_clients'] = Client.today_clients()
-    context['today_orders'] = Order.today_orders()
-    context['today_revenue'] = Order.today_revenue()
-    context['today_profit'] = Order.today_profit()
-
-
+    get_today_info(context)
+    
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
@@ -29,8 +25,7 @@ def index(request):
 @login_required(login_url="/login/")
 def pages(request):
     context = {}
-    # All resource paths end in .html.
-    # Pick out the html file name from the url. And load that template.
+    
     try:
         load_template = request.path.split('/')[-1]
 
@@ -39,10 +34,7 @@ def pages(request):
         context['segment'] = load_template
         
         if load_template == 'index.html':
-            context['today_clients'] = Client.today_clients()
-            context['today_orders'] = Order.today_orders()
-            context['today_revenue'] = Order.today_revenue()
-            context['today_profit'] = Order.today_profit()
+            get_today_info(context)
 
 
         html_template = loader.get_template('home/' + load_template)
@@ -55,3 +47,14 @@ def pages(request):
     except:
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
+
+
+def get_today_info(context):
+    today = datetime.now(pytz.timezone('Europe/Moscow')).date()
+    today_info = Order._get_data_for_period(today, today)
+
+    context['today_revenue'] = today_info[0]['revenue']
+    context['today_profit'] = today_info[0]['profit']
+    context['today_orders'] = today_info[0]['orders_count']
+
+    return today_info[0]
