@@ -40,12 +40,12 @@ services:
       - epox-money-manager
     environment:
       NGROK_AUTHTOKEN: "2XWRYI678AX94KVSwTpKS3o36sD_57iutsiwFMTWLFrp61sn"
-      NGROK_PORT: "appseed_app:5005"  # Пробросим порт 5005 для ngrok
+      NGROK_PORT: "epox_money_manager:5005"  # Пробросим порт 5005 для ngrok
     ports:
       - "4040:4040" # для веб-интерфейса  
     networks:
       - app_network  # Используем одну и ту же сеть
-    command: "http appseed-app:5005"
+    command: "http epox_money_manager:5005"
 
 networks:
   app_network:

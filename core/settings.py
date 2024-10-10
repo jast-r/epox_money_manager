@@ -27,8 +27,8 @@ DEBUG = env('DEBUG')
 ASSETS_ROOT = os.getenv('ASSETS_ROOT', '/static/assets') 
 
 # load production server from .env
-ALLOWED_HOSTS        = ['localhost', 'localhost:85', '127.0.0.1',  "50b7-176-112-142-112.ngrok-free.app",              env('SERVER', default='127.0.0.1') ]
-CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', "https://50b7-176-112-142-112.ngrok-free.app", 'https://' + env('SERVER', default='127.0.0.1') ]
+ALLOWED_HOSTS        = ['localhost', 'localhost:85', '127.0.0.1',  "1c0f-31-44-58-39.ngrok-free.app",              env('SERVER', default='127.0.0.1') ]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', "https://1c0f-31-44-58-39.ngrok-free.app", 'https://' + env('SERVER', default='127.0.0.1') ]
 
 # Application definition
 

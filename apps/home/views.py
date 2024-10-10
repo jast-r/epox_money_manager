@@ -53,8 +53,9 @@ def get_today_info(context):
     today = datetime.now(pytz.timezone('Europe/Moscow')).date()
     today_info = Order._get_data_for_period(today, today)
 
+    if len(today_info) == 0:
+        return None
+
     context['today_revenue'] = today_info[0]['revenue']
     context['today_profit'] = today_info[0]['profit']
     context['today_orders'] = today_info[0]['orders_count']
-
-    return today_info[0]
