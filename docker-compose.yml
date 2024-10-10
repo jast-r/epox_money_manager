@@ -4,6 +4,8 @@ services:
     restart: always
     env_file: .env
     build: .
+    environment:
+      - NGROK_URL=value
     networks:
       - app_network
     ports:
