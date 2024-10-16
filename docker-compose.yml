@@ -5,7 +5,7 @@ services:
     env_file: .env
     build: .
     environment:
-      - NGROK_URL=value
+      - NGROK_URL=bf0f-31-44-58-39.ngrok-free.app
     networks:
       - app_network
     ports:

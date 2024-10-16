@@ -56,9 +56,10 @@ class OrderForm(forms.ModelForm):
     )
     address = forms.CharField(
         label="Адрес",
-        widget=forms.TextInput(attrs={
+        widget=forms.Textarea(attrs={
             'class': 'form-control order',
-            'autocomplete': ''
+            'autocomplete': '',
+            'height': '120px'
         })
     )
     description = forms.CharField(

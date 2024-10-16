@@ -6,13 +6,11 @@
     class="table-light"
     {% endif %}
 >
-    <td class="text-center">{{ order.client_fio|linebreaksbr }}</td>
+    <td class="text-center">{{ order.created_at|date:"d.m.Y" }}<br>{{ order.created_at|date:"H:i:s" }}</td>
     <td class="text-center"><a href="https://t.me/{{ order.client_tg }}">{{ order.client_tg }}</a></td>
-    <td class="text-center">{{ order.client_phone  }}</td>
     <td class="text-center">{{ order.product.name }}</td>
     <td class="text-center">{{ order.quantity }}</td>
     <td class="text-center">{{ order.sell_price }} ₽</td>
-    <td class="text-center">{{ order.address|linebreaksbr }}</td>
     <td class="text-center">{{ order.description|linebreaksbr }}</td>
     <td class="text-center">
         {% if order.priority == order.Priority.URGENT %}
@@ -23,7 +21,6 @@
         <span class="badge badge-sm bg-primary">{{ order.get_priority_display }}</span>
         {% endif %}
     </td>
-    <td class="text-center">{{ order.created_at|date:"d.m.Y" }}<br>{{ order.created_at|date:"H:i:s" }}</td>
     <td class="text-center">
         <a href="{% url 'api/orders' order.id %}" class="get-order-form">
             <i class="fas fa-edit"></i>
