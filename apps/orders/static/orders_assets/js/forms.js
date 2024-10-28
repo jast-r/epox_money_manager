@@ -1,5 +1,12 @@
 var modal = $('#modal-system');
 
+const OrderStatuses = {
+    'Принят':       1,
+    'В процессе':   2,
+    'Доставка':     3,
+    'Выполнен':     4,
+}
+
 $(function () {
     // Get Orders Form to Create or Edit
     $('#ordersList').on('click', '.get-order-form', function (event) {
@@ -19,6 +26,44 @@ $(function () {
         params['url'] = url;
         AjaxDeleteOrder(params);
     });
+
+    $('#ordersList').on('click', '.order-status', function(event) {
+        event.preventDefault();
+        var orderId = $(this).closest('tr').find('.order-id').text();
+        var orderStatus = $(this).closest('tr').find('.order-status').text().trim();
+        
+        if (orderStatus === 'Выполнен') {
+            notification.warning('Заказ находится в финальном статусе.')
+            return;
+        }
+
+        // Определите новый статус
+        var nextOrderStatus = OrderStatuses[orderStatus] + 1;
+    
+        $.ajax({
+            url: '/api/orders/'+orderId+'/status/',
+            type: 'POST',
+            data: {
+                'status': nextOrderStatus,
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
+            },
+            success: function(data) {
+                console.log(data)
+                notification[data.valid](data.message);
+                if (data.valid === 'success') {
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500);
+                }
+            },
+            error: function() {
+                notification.error('Ошибка при обновлении статуса.');
+            }
+        });
+    })
+    
 
     // Save order after click save-order class
     modal.on('click', '.save-order', function (event) {

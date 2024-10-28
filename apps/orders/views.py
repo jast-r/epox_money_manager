@@ -70,6 +70,22 @@ def get_total_info(request):
     )
 
 
+def update_order_status(request, order_id):
+    print("WE ARE HERE")
+    try:
+        order = Order.objects.get(id=order_id)
+        new_status = request.POST.get('status')
+
+        if new_status:
+            order.status = new_status
+            order.save()
+            return JsonResponse({'valid': 'success', 'message': 'Статус заказа обновлен.'})
+        else:
+            return JsonResponse({'valid': 'error', 'message': 'Статус не указан.'})
+    except Order.DoesNotExist:
+        return JsonResponse({'valid': 'error', 'message': 'Заказ не найден.'})
+
+
 class TotalInfoCalculator:
     month_names = {
         1: "Янв.",
@@ -198,7 +214,7 @@ class OrderView(View):
         else:
             response = {'valid': 'error', 'message': form_validation_error(form)}
         return JsonResponse(response)
-
+    
     def put(self, request, pk=None, action=None):
         """Метод PUT: Обновляет существующий заказ"""
         order = self.get_object(pk)

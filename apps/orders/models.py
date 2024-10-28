@@ -23,7 +23,8 @@ class Order(models.Model):
     class Status(models.IntegerChoices):
         ACCEPTED = 1, "Принят"
         IN_PROGRESS = 2, "В процессе"
-        DONE = 3, "Выполнен"
+        DELIVERY = 3, "Доставка"
+        DONE = 4, "Выполнен"
 
     id = models.AutoField(primary_key=True)
     client_fio = models.CharField(max_length=100, null=True, blank=True)

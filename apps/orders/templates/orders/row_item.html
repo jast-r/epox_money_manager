@@ -2,10 +2,13 @@
     class="table-success" 
     {% elif  order.status == order.Status.IN_PROGRESS %}
     class="table-info"
+    {% elif  order.status == order.Status.DELIVERY %}
+    class="table-primary"
     {% else %}
     class="table-light"
     {% endif %}
 >
+    <td class="order-id text-center">{{ order.id }}</td>
     <td class="text-center">{{ order.created_at|date:"d.m.Y" }}<br>{{ order.created_at|date:"H:i:s" }}</td>
     <td class="text-center"><a href="https://t.me/{{ order.client_tg }}">{{ order.client_tg }}</a></td>
     <td class="text-center">{{ order.product.name }}</td>
@@ -19,6 +22,17 @@
         <span class="badge badge-sm bg-warning">{{ order.get_priority_display }}</span>
         {% else %}
         <span class="badge badge-sm bg-primary">{{ order.get_priority_display }}</span>
+        {% endif %}
+    </td>
+    <td class="order-status text-center">
+        {% if order.status == order.Status.ACCEPTED %}
+        <span class="badge badge-sm bg-dark">{{ order.get_status_display }}</span>
+        {% elif order.status == order.Status.IN_PROGRESS %}
+        <span class="badge badge-sm bg-info">{{ order.get_status_display }}</span>
+        {% elif order.status == order.Status.DELIVERY %}
+        <span class="badge badge-sm bg-primary">{{ order.get_status_display }}</span>
+        {% else %}
+        <span class="badge badge-sm bg-success">{{ order.get_status_display }}</span>
         {% endif %}
     </td>
     <td class="text-center">

@@ -10,6 +10,14 @@ table {
     border-collapse: collapse; /* Убирает пространство между ячейками */
     border-spacing: 0; /* Устанавливает расстояние между ячейками на 0 */
 }
+
+.order-status .badge {
+  cursor: pointer;
+}
+
+.order-id {
+  display: none;
+}
 </style>
 {% endblock stylesheets %}
 {% block content %}
@@ -44,6 +52,7 @@ table {
                 <th class="text-center" scope="col">Цена</th>
                 <th class="text-center" scope="col">Комментарий</th>
                 <th class="text-center" scope="col">Приоритет</th>
+                <th class="text-center" scope="col">Статус</th>
                 <th class="text-center" scope="col"> &nbsp;</th>
                 <th class="text-center" scope="col"> &nbsp;</th>
               </tr>
