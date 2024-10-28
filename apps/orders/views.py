@@ -71,7 +71,6 @@ def get_total_info(request):
 
 
 def update_order_status(request, order_id):
-    print("WE ARE HERE")
     try:
         order = Order.objects.get(id=order_id)
         new_status = request.POST.get('status')

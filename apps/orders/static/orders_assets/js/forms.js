@@ -50,7 +50,6 @@ $(function () {
                 xhr.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
             },
             success: function(data) {
-                console.log(data)
                 notification[data.valid](data.message);
                 if (data.valid === 'success') {
                     setTimeout(function () {

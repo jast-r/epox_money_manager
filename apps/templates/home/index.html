@@ -119,7 +119,6 @@
       newStartDate = new Date(startDate);
       switch (period) {
         case 'week':
-          console.log("AYYY")
           newStartDate.setDate(newStartDate.getDate() + 7);
           break;
         case 'month':
@@ -130,8 +129,6 @@
           break;
       }
     }
-
-    console.log(newStartDate)
 
     startDate = newStartDate;
 
@@ -153,8 +150,6 @@
 
     let start_date = dateRange.firstDay;
     let end_date = dateRange.lastDay;
-
-    console.log(start_date, end_date)
 
     fetch(`/api/orders/total-info/?start_date=${start_date}&end_date=${end_date}`)
       .then(response => response.json())
