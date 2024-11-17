@@ -55,7 +55,7 @@ services:
       - "traefik.http.routers.frontend.tls.certresolver=leresolver"
 
   epox-money-manager:
-    container_name: epox_money_manager
+    container_name: app
     restart: always
     env_file: .env
     build: .
