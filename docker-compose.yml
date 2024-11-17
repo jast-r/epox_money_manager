@@ -1,12 +1,72 @@
+version: "3"
+
 services:
+  traefik:
+    container_name: traefik
+    image: "traefik:latest"
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker
+      - --log.level=ERROR
+      - --certificatesresolvers.leresolver.acme.httpchallenge=true
+      - --certificatesresolvers.leresolver.acme.email=roman@jastrebkov.ru
+      - --certificatesresolvers.leresolver.acme.storage=./acme.json
+      - --certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web
+      - --api.dashboard=true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./acme.json:/acme.json"
+    labels:
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      # For traefik dashboard
+      - «traefik.enable=true»
+      - «traefik.http.routers.traefik.entrypoints=websecure»
+      - «traefik.http.routers.traefik.rule=Host(`traefik.r-jast.ru`)»
+      - «traefik.http.routers.traefik.tls=true»
+      - «traefik.http.routers.traefik.service=api@internal»
+      - «traefik.http.routers.traefik.tls.certresolver=leresolver»
+      - «traefik.http.services.traefik.loadbalancer.server.port=8080»  
+    networks:
+      - intranet
+
+  portainer:
+    image: portainer/portainer-ce:2.23.0
+    command: -H unix:///var/run/docker.sock
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - intranet
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`portainer.r-jast.ru`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.services.frontend.loadbalancer.server.port=9000"
+      - "traefik.http.routers.frontend.service=frontend"
+      - "traefik.http.routers.frontend.tls.certresolver=leresolver"
+
   epox-money-manager:
     container_name: epox_money_manager
     restart: always
     env_file: .env
     build: .
     environment:
-      - NGROK_URL=bf0f-31-44-58-39.ngrok-free.app
+      - DB_NAME=''
+      - DB_USERNAME=''
+      - DB_PASS=''
+      - DB_HOST=''
+      - DB_PORT=''
     networks:
+      - intranet
       - app_network
     ports:
       - "5005:5005"  # Пробросим порт 5005 для Gunicorn
@@ -14,6 +74,13 @@ services:
       postgres:
         condition: service_healthy
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:5005"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`alina-epox.r-jast.ru`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5005"
+      - "traefik.http.routers.frontend.service=frontend"
+      - "traefik.http.routers.frontend.tls.certresolver=leresolver"
 
   postgres:
     container_name: postgres
@@ -35,20 +102,11 @@ services:
     networks:
       - app_network
 
-  ngrok:
-    image: ngrok/ngrok
-    container_name: ngrok
-    depends_on:
-      - epox-money-manager
-    environment:
-      NGROK_AUTHTOKEN: "2XWRYI678AX94KVSwTpKS3o36sD_57iutsiwFMTWLFrp61sn"
-      NGROK_PORT: "epox_money_manager:5005"  # Пробросим порт 5005 для ngrok
-    ports:
-      - "4040:4040" # для веб-интерфейса  
-    networks:
-      - app_network  # Используем одну и ту же сеть
-    command: "http epox_money_manager:5005"
+volumes:
+  portainer_data:
 
 networks:
+  intranet:
+    name: intranet
   app_network:
-    driver: bridge
+    name: app_network
